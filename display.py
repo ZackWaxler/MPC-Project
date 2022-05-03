@@ -36,13 +36,12 @@ class Display:
   def draw_box(self, box):
     pygame.draw.rect(self.screen, box.color, 
       pygame.Rect(
-        Display.ORIGIN_X + box.x * Display.SCALE, 
-        Display.ORIGIN_Y + box.y * Display.SCALE,
+        Display.TRUE_X + box.x * Display.SCALE, 
+        Display.TRUE_Y + box.y * Display.SCALE,
         Box.WIDTH * Display.SCALE,
         Box.LENGTH * Display.SCALE
     ))
 
-  # Draw the car
   def draw_car(self, car):
     # Draw the car
     pygame.draw.polygon(self.screen, (0, 0, 0), 
@@ -68,7 +67,7 @@ class Display:
   def draw_state(self):
     font = pygame.font.Font('freesansbold.ttf', 16)
     text = font.render(
-      f'Step: {self.step} (x: {round(self.car.center_x, 3)}, y: {round(self.car.center_y, 3)}, head_ang: {round(self.car.heading_angle, 3)}, steer_ang: {round(self.car.steering_angle, 3)}, v: {round(self.car.velocity, 3)})',
+      f'[Step: {self.step}] Car Center: ({round(self.car.center_x, 3)},{round(self.car.center_y, 3)}), heading_angle: {round(self.car.heading_angle, 3)}, steering_ang: {round(self.car.steering_angle, 3)}, velocity: {round(self.car.velocity, 3)}',
       True, (0, 0, 0))
     self.screen.blit(text, (0, 0))
 
@@ -79,6 +78,8 @@ class Display:
 
   def start(self):
     pygame.init()
+    pygame.display.set_caption('Parallel Parking MPC Simulation')
+
     self.screen = pygame.display.set_mode([Display.SCREEN_WIDTH, Display.SCREEN_HEIGHT])
 
     self.running = True
@@ -100,25 +101,16 @@ class Display:
         self.draw_car(self.car)
         self.draw_state()
 
-      # Origin marker
-      pygame.draw.rect(self.screen, (0, 0, 0), 
-        pygame.Rect(
-          Display.ORIGIN_X - 2, 
-          Display.ORIGIN_Y - 2,
-          4,
-          4
-      ))
+      self.draw_grid()
 
-      # True position marker
-      pygame.draw.rect(self.screen, (0, 0, 0), 
+      # (0,0) marker
+      pygame.draw.rect(self.screen, (255, 255, 255), 
         pygame.Rect(
           Display.TRUE_X - 2, 
           Display.TRUE_Y - 2,
           4,
           4
       ))
-
-      self.draw_grid()
 
       pygame.display.flip()
 
