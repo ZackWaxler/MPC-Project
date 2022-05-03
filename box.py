@@ -1,4 +1,7 @@
 class Box:
+  """
+  Boxes representing parking spaces
+  """
   LENGTH = 24                  # Box length (cm)
   WIDTH = 50                   # Box width (cm)
 

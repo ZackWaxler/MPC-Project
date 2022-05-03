@@ -32,7 +32,7 @@ class Car:
 
   def __init__(self):
     self.velocity = 2                                  # Placeholder
-    self.steering_angle = 10.0                         # Steering angle (deg)
+    self.steering_angle = 3.0                          # Steering angle (deg)
     self.heading_angle = 0.0                           # "Car Heading" Angle - Psi (deg)
 
     self.x = box.Box.LENGTH / 2                        # Rear Left X Position
@@ -41,17 +41,19 @@ class Car:
     self.center_x = self.x + (Car.LENGTH / 2)
     self.center_y = self.y + (Car.WIDTH / 2) 
 
-
   def get_coordinates(self, point):
     """
-    L1  L2  
-    [   ]
-    R1  R2
+            L1  L2  
+    (Back)  [   ]  (Front)
+            R1  R2
     """
 
-    # TODO: For physical car
+    x, y = self.get_display_coordinates(point)
 
-    pass
+    return (
+      (x - display.Display.TRUE_X) / display.Display.SCALE,
+      (y - display.Display.TRUE_Y) / display.Display.SCALE,
+    )
 
   def get_display_coordinates(self, point):
     """
@@ -73,7 +75,7 @@ class Car:
         )
 
     if point == 'L2':
-      unrotated_coordinates = [ (Car.LENGTH / 2), -(Car.WIDTH / 2) ]
+      unrotated_coordinates = [ -(Car.LENGTH / 2), (Car.WIDTH / 2) ]
 
       rotated_coordinates = rotate_point(unrotated_coordinates, -self.heading_angle)
 
@@ -91,14 +93,14 @@ class Car:
         display.Display.TRUE_Y + ((self.center_y + rotated_coordinates[1]) * display.Display.SCALE) 
         )
     if point == 'R1':
-      unrotated_coordinates = [ - (Car.LENGTH / 2), (Car.WIDTH / 2) ]
+      unrotated_coordinates = [ (Car.LENGTH / 2), - (Car.WIDTH / 2) ]
+      # unrotated_coordinates = [ - (Car.LENGTH / 2), (Car.WIDTH / 2) ]
       rotated_coordinates = rotate_point(unrotated_coordinates, -self.heading_angle)
 
       return (
         display.Display.TRUE_X + ((self.center_x + rotated_coordinates[0]) * display.Display.SCALE),
         display.Display.TRUE_Y + ((self.center_y + rotated_coordinates[1]) * display.Display.SCALE) 
         )
-  
 
   def move(self, delta_time):
     # Movement should be different for the actual car

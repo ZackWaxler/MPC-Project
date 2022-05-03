@@ -18,7 +18,7 @@ class Display:
   # Drawing scale factor
   SCALE = 4
 
-  # Offset for the coordinate system used where (0, 0) is in the center of the middle box 
+  # Offset for the coordinate system used where (0, 0) is in the center of the middle box
   TRUE_X = ORIGIN_X
   TRUE_Y = ORIGIN_Y + (Box.LENGTH / 2) * SCALE 
 
@@ -77,8 +77,6 @@ class Display:
     pygame.draw.line(self.screen, (0, 0, 0), ((Display.SCREEN_WIDTH / 2), 0), ((Display.SCREEN_WIDTH / 2), Display.SCREEN_HEIGHT), width=1)
     pygame.draw.line(self.screen, (0, 0, 0), (0, Display.TRUE_Y), (Display.SCREEN_WIDTH, Display.TRUE_Y), width=1)
 
-
-  # Should be adapted to allow for going through the steps 1 by 1
   def start(self):
     pygame.init()
     self.screen = pygame.display.set_mode([Display.SCREEN_WIDTH, Display.SCREEN_HEIGHT])
