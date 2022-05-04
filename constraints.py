@@ -1,13 +1,13 @@
 from mpc import *
 from box import *
-from car import Car
+from car import *
 
 class Constraints:
 	"""
 	MPC constraint checkers
 	"""
 
-	MAX_ANGLE = 30
+	MAX_ANGLE = 35
 
 	MIN_VELOCITY = 1
 	MAX_VELOCITY = 10
@@ -20,6 +20,11 @@ class Constraints:
 
 	@staticmethod
 	def steering_angle(car):
+		"""
+		Ensure that the steering angle of the car is below the maximum angle
+		(doesn't do anything currently because this is checked elsewhere)
+		"""
+
 		if car.steering_angle > Constraints.MAX_ANGLE:
 			return False
 		else:
@@ -27,6 +32,11 @@ class Constraints:
 
 	@staticmethod
 	def velocity(car):
+		"""
+		Ensure that the velocity of the car is below the maximum velocity
+		(doesn't do anything currently because this is checked elsewhere)
+		"""
+
 		if car.velocity > Constraints.MAX_VELOCITY:
 			return False
 		else: 
@@ -35,13 +45,11 @@ class Constraints:
 	@staticmethod
 	def avoid_box_collision(car, box):
 		"""
-		The third condition avoids the front of the car going into the box in front of the car.
+		Prevent the front of the car from going into the spot ahead
 		"""
 
 		rx, ry = car.get_coordinates('R1')
 		lx, ly = car.get_coordinates('L1')
-
-		# print(f'R1({rx},{ry}) L1({lx},{ly}), Box: ({box.x},{box.y}) => ({box.x + Box.WIDTH},{box.y + Box.LENGTH})')
 
 		if rx < box.x + Box.WIDTH or lx < box.x + box.WIDTH:
 			return False
@@ -50,8 +58,10 @@ class Constraints:
 
 	def avoid_lower_bound(car, phase):
 		"""
-		Prevent the car from going under the spot (phase 2)
+		Prevent the car from going past the spot
+		(PHASE 2 ONLY)
 		"""
+
 		if phase != 2:
 			return True
 
@@ -65,7 +75,11 @@ class Constraints:
 
 	@staticmethod
 	def phase_1_on_track(car, step, phase, lookahead_step):
-		# Only apply the following logic to phase 1
+		"""
+		Ensure that the car reaches (0, 0) or close to it (within the margin) at the end of phase 1
+		(PHASE 1 ONLY)
+		"""
+
 		if phase != 1:
 			return True
 
@@ -76,6 +90,7 @@ class Constraints:
 				math.pow( (car.center_x - 0), 2 ) + \
 				math.pow( (car.center_y - 0), 2 ) )
 
+			# Constraint fails if the distance would be greater than the margin
 			if distance < Constraints.MARGIN_CENTER: 
 				return True
 			else:
@@ -85,10 +100,15 @@ class Constraints:
 
 	@staticmethod
 	def phase_2_on_track(car, step, phase, lookahead_step):
-		# Only apply the following logic to phase 1
+		"""
+		Ensure that the car is straght or close to it at the end of phase 2
+		(PHASE 2 ONLY)
+		"""
+
 		if phase != 2:
 			return True
 
+		# Constraint fails if the heading angle is above the minimum acceptable angle at the end of phase 2
 		if step + lookahead_step == MPC.STEPS_PER_PHASE * 2:
 			if car.heading_angle > Constraints.HEADING_ANGLE_MINIMUM:
 				return False

@@ -1,5 +1,4 @@
 import math
-# import box
 from box import *
 import display
 
@@ -20,6 +19,8 @@ def rotate_point(point, degrees):
 class Car:
   """
    MPC-Controlled Car
+
+   TODO: Refactor get_display_coordinates
   """
 
   # Static
@@ -45,6 +46,8 @@ class Car:
             L1  L2  
     (Back)  [   ]  (Front)
             R1  R2
+
+    Get the actual coordinates of a given point on the car
     """
 
     x, y = self.get_display_coordinates(point)
@@ -60,9 +63,7 @@ class Car:
     (Back)  [   ]  (Front)
             R1  R2
 
-    Get the display-relative coordinates of a given point on the car. 
-
-    TODO: Refactor
+    Get the display-relative coordinates of a given point on the car
     """
 
     if point == 'L1':

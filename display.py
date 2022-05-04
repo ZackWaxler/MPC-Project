@@ -1,12 +1,14 @@
-import pygame, time, threading, random
+import pygame, time, threading
 
-from box import Box
-from car import Car
+from box import *
+from car import *
 
 class Display:
   """
    Create a visual representation of the MPC controls
   """
+
+  TITLE = 'Parallel Parking MPC Simulation'
 
   SCREEN_WIDTH = 900
   SCREEN_HEIGHT = 900
@@ -22,10 +24,10 @@ class Display:
   TRUE_X = ORIGIN_X
   TRUE_Y = ORIGIN_Y + (Box.LENGTH / 2) * SCALE 
 
+  # Update functions are called by the MPC to transmit information about the simulation to the display thread
   def update_car(self, car):
     self.car = car
 
-  # Called by MPC
   def update_boxes(self, boxes):
     self.boxes = boxes
 
@@ -78,7 +80,7 @@ class Display:
 
   def start(self):
     pygame.init()
-    pygame.display.set_caption('Parallel Parking MPC Simulation')
+    pygame.display.set_caption(Display.TITLE)
 
     self.screen = pygame.display.set_mode([Display.SCREEN_WIDTH, Display.SCREEN_HEIGHT])
 
